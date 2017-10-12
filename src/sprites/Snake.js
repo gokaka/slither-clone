@@ -12,7 +12,7 @@ export default class extends Phaser.Sprite {
 
     this.game.snakes.push(this);
     // console.log(this.game.snakes);
-    this.debug = false;
+    this.debug = true;
     this.snakeLength = 0;
     this.spriteKey = spriteKey;
 
@@ -43,9 +43,41 @@ export default class extends Phaser.Sprite {
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
 
     // add 30 sections behind the head
-    this.initSections(30);
+    this.initSections(40);
     this.onDestroyedCallbacks = [];
     this.onDestroyedContexts = [];
+
+
+    //the edge is the front body that can collide with other snakes
+    //it is locked to the head of this snake
+    this.edgeOffset = 3;
+    this.edge = this.game.add.sprite(x, y - this.edgeOffset, this.spriteKey);
+    this.edge.name = "edge";
+    this.edge.alpha = 0;
+    this.game.physics.p2.enable(this.edge, this.debug);
+    this.edge.body.setCircle(this.edgeOffset);
+
+    //constrain edge to the front of the head
+    this.edgeLock = this.game.physics.p2.createLockConstraint(
+        this.edge.body, this.head.body, [0, -this.head.width*0.5-this.edgeOffset]
+    );
+
+    this.edge.body.onBeginContact.add(this.edgeContact, this);
+
+  }
+
+  edgeContact(phaserBody) {
+    // if the edge hits another snake's section, destroy this snake
+    if(phaserBody && this.sections.indexOf(phaserBody.sprite) == -1){
+      this.destroy();
+    }
+    //if the edge hits this snake's own section, a simple solution to avoid
+    //glitches is to move the edge to the center of the head, where it
+    //will then move back to the front because of the lock constraint
+    else if(phaserBody) {
+      this.edge.body.x = this.head.body.x;
+      this.edge.body.y = this.head.body.y;
+    }
   }
 
   addSectionAtPosition(x, y) {
@@ -202,6 +234,11 @@ export default class extends Phaser.Sprite {
         sec.scale.setTo(this.scale);
         sec.body.data.shapes[0].radius = this.game.physics.p2.pxm(sec.width*0.5);
     }
+
+    // update edge lock location with p2 physics
+    this.edgeLock.localOffsetB = [
+      0, this.game.physics.p2.pxmi(this.head.width*0.5 + this.edgeOffset)
+    ];
   }
 
   incrementSize() {
@@ -227,6 +264,9 @@ export default class extends Phaser.Sprite {
           this.onDestroyedContexts[i], [this]);
       }
     }
+
+    this.game.physics.p2.removeConstraint(this.edgeLock);
+    this.edge.destroy();       
   }
 
 

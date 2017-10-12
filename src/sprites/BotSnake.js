@@ -4,7 +4,7 @@ import { Util } from "../utils";
 
 export default class extends Snake {
   constructor (game, spriteKey, x, y) {
-    super(game, x, y, spriteKey);
+    super(game, spriteKey, x, y);
     this.trend = 1;
   }
 
