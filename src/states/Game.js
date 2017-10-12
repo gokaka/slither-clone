@@ -1,20 +1,31 @@
 /* globals __DEV__ */
-import Phaser from 'phaser'
-import Mushroom from '../sprites/Mushroom'
+import Phaser from 'phaser';
+import Mushroom from '../sprites/Mushroom';
+import Snake from '../sprites/Snake';
 
 export default class extends Phaser.State {
   init () {}
   preload () {}
 
   create () {
-    // const bannerText = 'Phaser + ES6 + Webpack'
-    // let banner = this.add.text(this.world.centerX, this.game.height - 80, bannerText)
-    // banner.font = 'Bangers'
-    // banner.padding.set(10, 16)
-    // banner.fontSize = 40
-    // banner.fill = '#77BFA3'
-    // banner.smoothed = false
-    // banner.anchor.setTo(0.5)
+    var width = this.game.width;
+    var height = this.game.height;
+
+    this.game.world.setBounds(-width, -height, width*2, height*2);
+    this.game.stage.backgroundColor = '#444';
+
+    // add background
+    var background = this.game.add.tileSprite(-width, -height, 
+      this.game.world.width, this.game.world.height, 'background');
+
+    // init physics & groups
+    this.game.physics.startSystem(Phaser.Physics.P2JS);
+
+    this.game.snakes = [];
+
+    // create player
+    var snake = new Snake(this.game, 'circle', 0, 0);
+    this.game.camera.follow(snake.head);
 
     // this.mushroom = new Mushroom({
     //   game: this.game,
@@ -25,12 +36,18 @@ export default class extends Phaser.State {
 
     // this.game.add.existing(this.mushroom)
 
-    
+  }
+
+  update () {
+    // update game components
+    for(var i=this.game.snakes.length-1; i>=0; i--){
+      this.game.snakes[i].update();
+    }
   }
 
   render () {
     if (__DEV__) {
-      this.game.debug.spriteInfo(this.mushroom, 32, 32)
+      // this.game.debug.spriteInfo(this.mushroom, 32, 32)
     }
   }
 }
