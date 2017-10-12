@@ -2,6 +2,7 @@
 import Phaser from 'phaser';
 import Mushroom from '../sprites/Mushroom';
 import Snake from '../sprites/Snake';
+import PlayerSnake from '../sprites/PlayerSnake';
 
 export default class extends Phaser.State {
   init () {}
@@ -24,7 +25,7 @@ export default class extends Phaser.State {
     this.game.snakes = [];
 
     // create player
-    var snake = new Snake(this.game, 'circle', 0, 0);
+    var snake = new PlayerSnake(this.game, 'circle', 0, 0);
     this.game.camera.follow(snake.head);
 
     // this.mushroom = new Mushroom({
