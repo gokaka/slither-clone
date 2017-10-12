@@ -237,7 +237,7 @@ export default class extends Phaser.Sprite {
 
     // update edge lock location with p2 physics
     this.edgeLock.localOffsetB = [
-      0, this.game.physics.p2.pxmi(this.head.width*0.5 + this.edgeOffset)
+      0, this.game.physics.p2.pxm(this.head.width*0.5 + this.edgeOffset)
     ];
   }
 
@@ -267,6 +267,11 @@ export default class extends Phaser.Sprite {
 
     this.game.physics.p2.removeConstraint(this.edgeLock);
     this.edge.destroy();       
+
+    //destroy food that is constrained to the snake head
+    for (var i = this.food.length - 1 ; i >= 0 ; i--) {
+      this.food[i].destroy();
+    }
   }
 
 

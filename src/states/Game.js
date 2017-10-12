@@ -4,6 +4,8 @@ import Mushroom from '../sprites/Mushroom';
 import Snake from '../sprites/Snake';
 import PlayerSnake from '../sprites/PlayerSnake';
 import BotSnake from '../sprites/BotSnake';
+import Food from '../sprites/Food';
+import {Util} from '../utils';
 
 export default class extends Phaser.State {
   init () {}
@@ -22,6 +24,14 @@ export default class extends Phaser.State {
 
     // init physics & groups
     this.game.physics.startSystem(Phaser.Physics.P2JS);
+    this.foodGroup = this.game.add.group();
+    this.snakeHeadCollisionGroup = this.game.physics.p2.createCollisionGroup();
+    this.foodCollisionGroup = this.game.physics.p2.createCollisionGroup();
+    
+    //add food randomly
+    for (var i = 0 ; i < 100 ; i++) {
+        this.initFood(Util.randomInt(-width, width), Util.randomInt(-height, height));
+    }
 
     this.game.snakes = [];
 
@@ -34,21 +44,46 @@ export default class extends Phaser.State {
     new BotSnake(this.game, 'blue-circle', -200, 0);
     new BotSnake(this.game, 'blue-circle', 200, 0);
 
-    // this.mushroom = new Mushroom({
-    //   game: this.game,
-    //   x: this.world.centerX,
-    //   y: this.world.centerY,
-    //   asset: 'mushroom'
-    // })
 
-    // this.game.add.existing(this.mushroom)
+    //initialize snake groups and collision
+    for (var i = 0 ; i < this.game.snakes.length ; i++) {
+      var snake = this.game.snakes[i];
+      snake.head.body.setCollisionGroup(this.snakeHeadCollisionGroup);
+      snake.head.body.collides([this.foodCollisionGroup]);
+      //callback for when a snake is destroyed
+      snake.addDestroyedCallback(this.snakeDestroyed, this);
+    }
 
+  }
+
+  initFood(x, y) {
+    var f = new Food(this.game, x, y);
+    f.sprite.body.setCollisionGroup(this.foodCollisionGroup);
+    this.foodGroup.add(f.sprite);
+    f.sprite.body.collides([this.snakeHeadCollisionGroup]);
+    return f;
+  }
+
+  snakeDestroyed(snake) {
+    //place food where snake was destroyed
+    for (var i = 0 ; i < snake.headPath.length ;
+    i += Math.round(snake.headPath.length / snake.snakeLength) * 2) {
+      this.initFood(
+        snake.headPath[i].x + Util.randomInt(-10,10),
+        snake.headPath[i].y + Util.randomInt(-10,10)
+      );
+    }
   }
 
   update () {
     // update game components
     for(var i=this.game.snakes.length-1; i>=0; i--){
       this.game.snakes[i].update();
+    }
+
+    for (var i = this.foodGroup.children.length - 1 ; i >= 0 ; i--) {
+      var f = this.foodGroup.children[i];
+      f.food.update();
     }
   }
 
