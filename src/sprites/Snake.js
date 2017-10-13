@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import EyePair from './EyePair';
 import { Util } from "../utils";
 
 export default class extends Phaser.Sprite {
@@ -44,6 +45,11 @@ export default class extends Phaser.Sprite {
 
     // add 30 sections behind the head
     this.initSections(40);
+
+    // init eyes
+    this.eyes = new EyePair(this.game, this.head, this.scale);
+
+    
     this.onDestroyedCallbacks = [];
     this.onDestroyedContexts = [];
 
@@ -63,7 +69,6 @@ export default class extends Phaser.Sprite {
     );
 
     this.edge.body.onBeginContact.add(this.edgeContact, this);
-
   }
 
   edgeContact(phaserBody) {
@@ -172,6 +177,9 @@ export default class extends Phaser.Sprite {
        this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
        this.onCycleComplete();
      }
+
+    //update the eyes
+    this.eyes.update();
   }
 
   findNextPointIndex(currentIndex) {
@@ -239,6 +247,8 @@ export default class extends Phaser.Sprite {
     this.edgeLock.localOffsetB = [
       0, this.game.physics.p2.pxm(this.head.width*0.5 + this.edgeOffset)
     ];
+
+    this.eyes.setScale(scale);
   }
 
   incrementSize() {
@@ -272,6 +282,8 @@ export default class extends Phaser.Sprite {
     for (var i = this.food.length - 1 ; i >= 0 ; i--) {
       this.food[i].destroy();
     }
+
+    this.eyes.destroy();
   }
 
 

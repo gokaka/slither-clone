@@ -17,6 +17,8 @@ export default class extends Phaser.State {
 
     this.load.image('circle', 'assets/images/circle.png');
     this.load.image('blue-circle', 'assets/images/blue-circle.png');
+    this.load.image('eye-white', 'assets/images/eye-white.png');
+    this.load.image('eye-black', 'assets/images/eye-black.png');
     this.load.image('food', 'assets/images/food.png');
     this.load.image('background', 'assets/images/tile.png');
 

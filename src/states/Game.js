@@ -6,12 +6,16 @@ import PlayerSnake from '../sprites/PlayerSnake';
 import BotSnake from '../sprites/BotSnake';
 import Food from '../sprites/Food';
 import {Util} from '../utils';
+import config from '../config';
 
 export default class extends Phaser.State {
   init () {}
   preload () {}
 
   create () {
+
+    this.game.sound.mute = config.muteSound;
+    
     var width = this.game.width;
     var height = this.game.height;
 

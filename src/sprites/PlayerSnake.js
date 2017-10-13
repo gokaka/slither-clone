@@ -13,8 +13,8 @@ export default class extends Snake {
     spaceKey.onDown.add(this.spaceKeyDown, this);
     spaceKey.onUp.add(this.spaceKeyUp, this);
     this.addDestroyedCallback(() => {
-        spaceKey.onDown.remove(this.spaceKeyDown, this);
-        spaceKey.onUp.remove(this.spaceKeyUp, this);
+      spaceKey.onDown.remove(this.spaceKeyDown, this);
+      spaceKey.onUp.remove(this.spaceKeyUp, this);
     }, this);
   }
 
