@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import config from '../config';
 
 export default class {
 
@@ -52,6 +53,7 @@ export default class {
       this.sprite.destroy();
       this.head.snake.food.splice(this.head.snake.food.indexOf(this), 1);
       this.head = null;
+
       this.eatSound.play();
     }
   }

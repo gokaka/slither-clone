@@ -1,5 +1,6 @@
 export default {
   gameWidth: 800,
   gameHeight: 500,
-  localStorageName: 'phaseres6webpack'
+  localStorageName: 'phaseres6webpack',
+  muteSound: true,
 }
