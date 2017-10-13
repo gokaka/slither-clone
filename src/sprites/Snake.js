@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import EyePair from './EyePair';
+import Shadow from './Shadow';
 import { Util } from "../utils";
 
 export default class extends Phaser.Sprite {
@@ -13,7 +14,7 @@ export default class extends Phaser.Sprite {
 
     this.game.snakes.push(this);
     // console.log(this.game.snakes);
-    this.debug = true;
+    this.debug = false;
     this.snakeLength = 0;
     this.spriteKey = spriteKey;
 
@@ -34,8 +35,10 @@ export default class extends Phaser.Sprite {
     this.preferredDistance = 17*this.scale;
     this.queuedSections = 0;
 
-    this.sectionGroup = this.game.add.group();
-
+    // init shadow
+    this.shadow = new Shadow(this.game, this.sections, this.scale);
+    
+    this.sectionGroup = this.game.add.group();    
     // add the head of the snake
     this.head = this.addSectionAtPosition(x, y);
     this.head.name = "head";
@@ -49,7 +52,6 @@ export default class extends Phaser.Sprite {
     // init eyes
     this.eyes = new EyePair(this.game, this.head, this.scale);
 
-    
     this.onDestroyedCallbacks = [];
     this.onDestroyedContexts = [];
 
@@ -103,6 +105,9 @@ export default class extends Phaser.Sprite {
     // add circle
     sec.body.clearShapes();
     sec.body.addCircle(sec.width * 0.5);
+
+    // add shadow
+    this.shadow.add(x, y);
 
     return sec;
   }
@@ -180,6 +185,9 @@ export default class extends Phaser.Sprite {
 
     //update the eyes
     this.eyes.update();
+
+    // update shadow
+    this.shadow.update();
   }
 
   findNextPointIndex(currentIndex) {
@@ -284,6 +292,8 @@ export default class extends Phaser.Sprite {
     }
 
     this.eyes.destroy();
+
+    this.shadow.destroy();
   }
 
 
