@@ -21,8 +21,10 @@ export default class extends Snake {
   update() {
     //find the angle that the head needs to rotate
     //through in order to face the mouse
-    var mousePosX = this.game.input.activePointer.worldX;
-    var mousePosY = this.game.input.activePointer.worldY;
+    // var mousePosX = this.game.input.activePointer.worldX;
+    // var mousePosY = this.game.input.activePointer.worldY;
+    var mousePosX = this.worldX;
+    var mousePosY = this.worldY;
     var headX = this.head.body.x;
     var headY = this.head.body.y;
     var angle = (180*Math.atan2(mousePosX-headX,mousePosY-headY)/Math.PI);
@@ -52,6 +54,8 @@ export default class extends Snake {
 
     //call the original snake update method
     super.update();
+
+    // console.log(mousePosX, mousePosY);
   }
 
   spaceKeyDown() {

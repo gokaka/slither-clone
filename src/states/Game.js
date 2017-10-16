@@ -13,10 +13,9 @@ export default class extends Phaser.State {
   init () {
     this.game.desiredFps = 30;
     this.game.sound.mute = config.muteSound;
-    this.sync = new Sync();
+    this.sync = new Sync(this.game);
   }
   preload () {
-    // this.sync.loadData();
   }
 
   create () {
@@ -45,6 +44,7 @@ export default class extends Phaser.State {
 
     // create player
     var snake = new PlayerSnake(this.game, 'circle', 0, 0);
+    this.game.playerSnake = snake;
     this.game.camera.follow(snake.head);
 
 
@@ -62,6 +62,14 @@ export default class extends Phaser.State {
       snake.addDestroyedCallback(this.snakeDestroyed, this);
     }
 
+    this.game.time.events.loop(Phaser.Timer.SECOND, this.updatePosition, this);
+  }
+
+  updatePosition() {
+    var mousePosX = this.game.input.activePointer.worldX;
+    var mousePosY = this.game.input.activePointer.worldY;
+    // console.log(mousePosX, mousePosY);
+    this.sync.updatePos(mousePosX, mousePosY);
   }
 
   initFood(x, y) {
