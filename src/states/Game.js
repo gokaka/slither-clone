@@ -7,15 +7,19 @@ import BotSnake from '../sprites/BotSnake';
 import Food from '../sprites/Food';
 import {Util} from '../utils';
 import config from '../config';
+import Sync from '../network/Sync';
 
 export default class extends Phaser.State {
-  init () {}
-  preload () {}
+  init () {
+    this.game.desiredFps = 30;
+    this.game.sound.mute = config.muteSound;
+    this.sync = new Sync();
+  }
+  preload () {
+    // this.sync.loadData();
+  }
 
   create () {
-
-    this.game.sound.mute = config.muteSound;
-    
     var width = this.game.width;
     var height = this.game.height;
 
@@ -45,8 +49,8 @@ export default class extends Phaser.State {
 
 
     //create bots
-    new BotSnake(this.game, 'blue-circle', -200, 0);
-    new BotSnake(this.game, 'blue-circle', 200, 0);
+    // new BotSnake(this.game, 'blue-circle', -200, 0);
+    // new BotSnake(this.game, 'blue-circle', 200, 0);
 
 
     //initialize snake groups and collision
@@ -94,6 +98,7 @@ export default class extends Phaser.State {
   render () {
     if (__DEV__) {
       // this.game.debug.spriteInfo(this.mushroom, 32, 32)
+      this.game.debug.inputInfo(32, 32);
     }
   }
 }
