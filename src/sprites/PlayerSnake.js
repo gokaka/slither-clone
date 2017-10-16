@@ -23,8 +23,8 @@ export default class extends Snake {
     //through in order to face the mouse
     // var mousePosX = this.game.input.activePointer.worldX;
     // var mousePosY = this.game.input.activePointer.worldY;
-    var mousePosX = this.worldX;
-    var mousePosY = this.worldY;
+    var mousePosX = this.mouseX;
+    var mousePosY = this.mouseY;
     var headX = this.head.body.x;
     var headY = this.head.body.y;
     var angle = (180*Math.atan2(mousePosX-headX,mousePosY-headY)/Math.PI);

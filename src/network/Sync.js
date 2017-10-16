@@ -32,18 +32,20 @@ export default class {
       rootRef.on('value', (snapshot) => {
         var pos = snapshot.val();
         console.log(snapshot.val());
-        this.game.playerSnake.worldX = pos.x;
-        this.game.playerSnake.worldY = pos.y;
+        this.game.playerSnake.mouseX = pos.mouseX;
+        this.game.playerSnake.mouseY = pos.mouseY;
       });
     } catch(ex){
       console.log(ex);
     } 
   }
 
-  updatePos(x, y){
+  updatePos(mouseX, mouseY, snakeX, snakeY){
     var posData = {
-      x: x, 
-      y: y
+      mouseX: mouseX, 
+      mouseY: mouseY,
+      snakeX: snakeX,
+      snakeY: snakeY
     };
     if(this.uid){
       var key = `snake/${this.uid}`;

@@ -68,8 +68,10 @@ export default class extends Phaser.State {
   updatePosition() {
     var mousePosX = this.game.input.activePointer.worldX;
     var mousePosY = this.game.input.activePointer.worldY;
+    var snakeX = this.game.playerSnake.head.x;
+    var snakeY = this.game.playerSnake.head.y;
     // console.log(mousePosX, mousePosY);
-    this.sync.updatePos(mousePosX, mousePosY);
+    this.sync.updatePos(mousePosX, mousePosY, snakeX, snakeY);
   }
 
   initFood(x, y) {
