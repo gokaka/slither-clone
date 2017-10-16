@@ -3,8 +3,8 @@ import Snake from './Snake';
 import { Util } from "../utils";
 
 export default class extends Snake {
-  constructor (game, spriteKey, x, y) {
-    super(game, spriteKey, x, y);
+  constructor (game, spriteKey, x, y, uid) {
+    super(game, spriteKey, x, y, uid);
     this.cursors = game.input.keyboard.createCursorKeys();
     
     //handle the space key so that the player's snake can speed up

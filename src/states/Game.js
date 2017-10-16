@@ -36,42 +36,48 @@ export default class extends Phaser.State {
     this.foodCollisionGroup = this.game.physics.p2.createCollisionGroup();
     
     //add food randomly
-    for (var i = 0 ; i < 100 ; i++) {
-        this.initFood(Util.randomInt(-width, width), Util.randomInt(-height, height));
-    }
+    // for (var i = 0 ; i < 100 ; i++) {
+    //     this.initFood(Util.randomInt(-width, width), Util.randomInt(-height, height));
+    // }
 
-    this.game.snakes = [];
+    this.game.snakes = {};
+    // this.initSnakes();
+   
+    this.game.time.events.loop(Phaser.Timer.SECOND * 0.5, this.updatePosition, this);
+  }
 
-    // create player
-    var snake = new PlayerSnake(this.game, 'circle', 0, 0);
-    this.game.playerSnake = snake;
-    this.game.camera.follow(snake.head);
-
-
-    //create bots
-    // new BotSnake(this.game, 'blue-circle', -200, 0);
-    // new BotSnake(this.game, 'blue-circle', 200, 0);
-
-
-    //initialize snake groups and collision
-    for (var i = 0 ; i < this.game.snakes.length ; i++) {
-      var snake = this.game.snakes[i];
-      snake.head.body.setCollisionGroup(this.snakeHeadCollisionGroup);
-      snake.head.body.collides([this.foodCollisionGroup]);
-      //callback for when a snake is destroyed
-      snake.addDestroyedCallback(this.snakeDestroyed, this);
-    }
-
-    this.game.time.events.loop(Phaser.Timer.SECOND, this.updatePosition, this);
+  initSnakes(){
+     // create player
+     var snake = new PlayerSnake(this.game, 'circle', 0, 0);
+     this.game.playerSnake = snake;
+     this.game.camera.follow(snake.head);
+ 
+ 
+     //create bots
+    //  new BotSnake(this.game, 'blue-circle', -200, 0);
+    //  new BotSnake(this.game, 'blue-circle', 200, 0);
+ 
+ 
+     //initialize snake groups and collision
+     for (var uid in this.game.snakes) {
+       var snake = this.game.snakes[uid];
+       snake.head.body.setCollisionGroup(this.snakeHeadCollisionGroup);
+       snake.head.body.collides([this.foodCollisionGroup]);
+       //callback for when a snake is destroyed
+       snake.addDestroyedCallback(this.snakeDestroyed, this);
+     }
+ 
   }
 
   updatePosition() {
-    var mousePosX = this.game.input.activePointer.worldX;
-    var mousePosY = this.game.input.activePointer.worldY;
-    var snakeX = this.game.playerSnake.head.x;
-    var snakeY = this.game.playerSnake.head.y;
-    // console.log(mousePosX, mousePosY);
-    this.sync.updatePos(mousePosX, mousePosY, snakeX, snakeY);
+    if(this.game.playerSnake){
+      var mousePosX = this.game.input.activePointer.worldX;
+      var mousePosY = this.game.input.activePointer.worldY;
+      var snakeX = this.game.playerSnake.head.x;
+      var snakeY = this.game.playerSnake.head.y;
+      // console.log(mousePosX, mousePosY);
+      this.sync.updatePos(mousePosX, mousePosY, snakeX, snakeY);
+    }
   }
 
   initFood(x, y) {
@@ -95,8 +101,11 @@ export default class extends Phaser.State {
 
   update () {
     // update game components
-    for(var i=this.game.snakes.length-1; i>=0; i--){
-      this.game.snakes[i].update();
+    // for(var i=this.game.snakes.length-1; i>=0; i--){
+    //   this.game.snakes[i].update();
+    // }
+    for(var uid in this.game.snakes){
+      this.game.snakes[uid].update();
     }
 
     for (var i = this.foodGroup.children.length - 1 ; i >= 0 ; i--) {

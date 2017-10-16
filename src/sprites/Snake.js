@@ -4,15 +4,16 @@ import Shadow from './Shadow';
 import { Util } from "../utils";
 
 export default class extends Phaser.Sprite {
-  constructor (game, spriteKey, x, y) {
+  constructor (game, spriteKey, x, y, uid) {
     super(game, x, y, spriteKey);
     // this.anchor.setTo(0.5)
     
     if(!this.game.snakes){
-      this.game.snakes = [];
+      this.game.snakes = {};
     }
 
-    this.game.snakes.push(this);
+    if(!uid){ uid = Util.randUid(); }
+    this.game.snakes[uid] = this;
     // console.log(this.game.snakes);
     this.debug = false;
     this.snakeLength = 0;
@@ -47,7 +48,7 @@ export default class extends Phaser.Sprite {
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
 
     // add 30 sections behind the head
-    this.initSections(40);
+    this.initSections(10);
 
     // init eyes
     this.eyes = new EyePair(this.game, this.head, this.scale);
@@ -270,7 +271,8 @@ export default class extends Phaser.Sprite {
   }
 
   destroy() {
-    this.game.snakes.splice(this.game.snakes.indexOf(this), 1);
+    // this.game.snakes.splice(this.game.snakes.indexOf(this), 1);
+    delete this.game.snakes[this.uid];
     this.sections.forEach(function(sec, index) {
         sec.destroy();
     });

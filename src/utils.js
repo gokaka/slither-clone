@@ -28,6 +28,16 @@ export const Util = {
       var withinRoot = Math.pow(x1-x2,2) + Math.pow(y1-y2,2);
       var dist = Math.pow(withinRoot,0.5);
       return dist;
+  },
+
+  randUid: function(){
+    var base = "abcdefghijklmnopqrstuvwxyz";
+    var uid = "";
+    for(var i=0; i<4; i++) {
+      var idx = Math.floor(Math.random() * 26);
+      uid += base[idx];
+    }
+    return uid;
   }
 };
 
